@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Ideology Comparison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Political Ideology Comparison</h1>
+        <form id="comparison-form">
+            <label for="ideology-a">Ideology A Name:</label>
+            <input type="text" id="ideology-a" placeholder="Enter name of Ideology A" required>
+
+            <label for="scores-a">Scores for Ideology A (comma-separated, e.g., 8,6,7,9,8):</label>
+            <input type="text" id="scores-a" placeholder="Enter scores for Ideology A" required>
+
+            <label for="ideology-b">Ideology B Name:</label>
+            <input type="text" id="ideology-b" placeholder="Enter name of Ideology B" required>
+
+            <label for="scores-b">Scores for Ideology B (comma-separated, e.g., 5,8,6,5,7):</label>
+            <input type="text" id="scores-b" placeholder="Enter scores for Ideology B" required>
+
+            <button type="button" onclick="compareIdeologies()">Compare</button>
+        </form>
+
+        <div id="results" class="results" style="display: none;"></div>
+    </div>
+
+    <script>
+        function compareIdeologies() {
+            const weights = [0.3, 0.25, 0.2, 0.15, 0.1];
+
+            const ideologyA = document.getElementById('ideology-a').value.trim();
+            const scoresA = document.getElementById('scores-a').value.split(',').map(num => parseFloat(num.trim()));
+
+            const ideologyB = document.getElementById('ideology-b').value.trim();
+            const scoresB = document.getElementById('scores-b').value.split(',').map(num => parseFloat(num.trim()));
+
+            if (scoresA.length !== weights.length || scoresB.length !== weights.length || scoresA.some(isNaN) || scoresB.some(isNaN)) {
+                alert("Please enter exactly 5 valid numerical scores for each ideology.");
+                return;
+            }
+
+            const weightedScoreA = scoresA.reduce((sum, score, index) => sum + score * weights[index], 0);
+            const weightedScoreB = scoresB.reduce((sum, score, index) => sum + score * weights[index], 0);
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <h2>Comparison Results</h2>
+                <p><strong>${ideologyA || "Ideology A"}:</strong> ${weightedScoreA.toFixed(2)}</p>
+                <p><strong>${ideologyB || "Ideology B"}:</strong> ${weightedScoreB.toFixed(2)}</p>
+                <p>The higher score indicates the more favorable ideology based on the provided criteria and weights.</p>
+            `;
+        }
+    </script>
+</body>
+</html>
